@@ -5,34 +5,40 @@ type Props = {
   recipes: Recipe[];
   selectedRecipeId?: string;
   onSelectRecipe: (recipe: Recipe) => void;
+
+  // Search value comes from App.tsx
+  searchText: string;
+
+  // Function to update search value in App.tsx
+  onSearchTextChange: (value: string) => void;
 };
 
-export function RecipeList({ recipes, selectedRecipeId, onSelectRecipe }: Props) {
+export function RecipeList({
+  recipes,
+  selectedRecipeId,
+  onSelectRecipe,
+  searchText,
+  onSearchTextChange,
+}: Props) {
   return (
     <div className="recipe-list">
-      
-      {/* Top card: where user pastes URL */}
       <div className="add-recipe-card">
-        
-        {/* Input box for URL */}
+        {/* Controlled input: React controls the value */}
         <input
-          placeholder="Paste recipe URL..."
+          value={searchText}
+          onChange={(event) => onSearchTextChange(event.target.value)}
+          placeholder="Search recipes..."
           className="recipe-input"
         />
 
-        {/* Button (we'll wire functionality later) */}
-        <button className="add-recipe-btn">
-          + Add Recipe
-        </button>
+        <button className="add-recipe-btn">+ Add Recipe</button>
       </div>
 
-      {/* Section title */}
       <div className="all-recipes-header">
         <span>ALL RECIPES</span>
         <span className="recipe-count">{recipes.length}</span>
       </div>
 
-      {/* Loop through recipes and render cards */}
       {recipes.map((recipe) => (
         <RecipeCard
           key={recipe.id}
