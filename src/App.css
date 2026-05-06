@@ -50,8 +50,9 @@
 .app-body {
   height: calc(100vh - 70px);
   display: grid;
-  grid-template-columns: 260px 360px minmax(0, 1fr);
+  grid-template-columns: 1fr 1fr 3fr;
   overflow: hidden;
+  justify-content: center;
 }
 
 /* ===== Sidebar ===== */
@@ -92,7 +93,6 @@
 
 .recipe-list-column {
   padding: 22px;
-  border-right: 1px solid #e5e5e5;
 }
 
 .recipe-list {
@@ -192,6 +192,7 @@
 .recipe-detail-column {
   overflow-y: auto;
   display: block;
+  padding: 22px;
 }
 
 .recipe-detail-wrapper {
@@ -200,7 +201,7 @@
 
 .recipe-detail {
   width: 100%;
-  max-width: 980px;
+  max-width: 100%;
   font-weight: 600;
   background: white;
   border: 1px solid #ddd;
