@@ -1,3 +1,4 @@
+import { Clock } from "lucide-react";
 import type { Recipe } from "../../types/recipe";
 
 type Props = {
@@ -12,13 +13,14 @@ export function RecipeCard({ recipe, isSelected, onSelect }: Props) {
       onClick={onSelect}
       className={`recipe-card ${isSelected ? "selected" : ""}`}
     >
-      {/* Left: image */}
       <img src={recipe.imageUrl} alt={recipe.title} />
 
-      {/* Right: text */}
       <div className="recipe-info">
         <strong>{recipe.title}</strong>
-        <span>{recipe.totalTime}</span>
+        <span>
+          <Clock size={13} />
+          {recipe.totalTime}
+        </span>
       </div>
     </button>
   );

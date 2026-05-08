@@ -1,18 +1,20 @@
+export type RecipeFolder = "Dinner" | "Baking";
+
 export type Recipe = {
   id: string;
   title: string;
   imageUrl: string;
-  folder: "Dinner" | "Baking";
+  folder: RecipeFolder;
   prepTime?: string;
   cookTime?: string;
-  servings?: number;
+  servings?: string;
   totalTime: string;
   nutrition: {
-    carbs: string;
-    salt: string;
-    fat: string;
-    protein: string;
-    calories: string;
+    calories: number | null;
+    protein: number | null;
+    sugars: number | null;
+    carbs: number | null;
+    fat: number | null;
   };
   ingredients: string[];
   method: string[];
