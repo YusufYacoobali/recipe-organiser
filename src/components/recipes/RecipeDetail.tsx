@@ -9,16 +9,22 @@ import {
   Users,
   Utensils,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { Recipe } from "../../types/recipe";
 
 type Props = {
   recipe: Recipe | null;
+  onSaveNotes: (recipeId: string, notes: string) => void;
 };
 
-export function RecipeDetail({ recipe }: Props) {
-  // Local state for notes. Later this can be saved to backend/Cosmos DB.
-  const [notes, setNotes] = useState("");
+export function RecipeDetail({ recipe, onSaveNotes }: Props) {
+  // Draft form state. The saved version lives on the recipe object in App.tsx.
+  const [notesDraft, setNotesDraft] = useState("");
+
+  //useEffect is used to update the local notes textbox when the selected recipe changes, because notesDraft does not automatically update when a new recipe prop is passed in.
+  useEffect(() => {
+    setNotesDraft(recipe?.notes ?? "");
+  }, [recipe?.id, recipe?.notes]);
 
   if (!recipe) {
     return (
@@ -111,12 +117,15 @@ export function RecipeDetail({ recipe }: Props) {
             </h2>
 
             <textarea
-              value={notes}
-              onChange={(e) => setNotes(e.target.value)}
+              value={notesDraft}
+              onChange={(e) => setNotesDraft(e.target.value)}
               placeholder="Add your own notes, tips, or variations here..."
             />
 
-            <button className="save-notes-btn">
+            <button
+              className="save-notes-btn"
+              onClick={() => onSaveNotes(recipe.id, notesDraft)}
+            >
               <Save size={16} /> Save Notes
             </button>
           </section>

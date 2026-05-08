@@ -10,8 +10,11 @@ import "./App.css";
 type FolderFilter = "All Recipes" | RecipeFolder;
 
 function App() {
-  // Stores the recipe currently selected by the user.
-  const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(mockRecipes[0]);
+  // Stores the recipes the app is currently showing.
+  const [recipes, setRecipes] = useState<Recipe[]>(mockRecipes);
+
+  // Stores the id of the recipe currently selected by the user.
+  const [selectedRecipeId, setSelectedRecipeId] = useState(mockRecipes[0]?.id ?? null);
 
   // Stores whatever the user types in the URL/search box.
   const [searchText, setSearchText] = useState("");
@@ -20,7 +23,7 @@ function App() {
   const [selectedFolder, setSelectedFolder] = useState<FolderFilter>("Dinner");
 
   // Derived data: calculate it from recipes, folder state, and search state.
-  const filteredRecipes = mockRecipes.filter((recipe) => {
+  const filteredRecipes = recipes.filter((recipe) => {
     const matchesFolder =
       selectedFolder === "All Recipes" || recipe.folder === selectedFolder;
 
@@ -31,7 +34,18 @@ function App() {
     return matchesFolder && matchesSearch;
   });
 
+  const selectedRecipe =
+    recipes.find((recipe) => recipe.id === selectedRecipeId) ?? null;
+
   const listTitle = selectedFolder.toUpperCase();
+
+  function handleSaveNotes(recipeId: string, notes: string) {
+    setRecipes((currentRecipes) =>
+      currentRecipes.map((recipe) =>
+        recipe.id === recipeId ? { ...recipe, notes } : recipe
+      )
+    );
+  }
 
   return (
     <div className="app">
@@ -47,15 +61,15 @@ function App() {
           <RecipeList
             title={listTitle}
             recipes={filteredRecipes}
-            selectedRecipeId={selectedRecipe?.id}
-            onSelectRecipe={setSelectedRecipe}
+            selectedRecipeId={selectedRecipeId ?? undefined}
+            onSelectRecipe={(recipe) => setSelectedRecipeId(recipe.id)}
             searchText={searchText}
             onSearchTextChange={setSearchText}
           />
         </main>
 
         <section className="recipe-detail-column">
-          <RecipeDetail recipe={selectedRecipe} />
+          <RecipeDetail recipe={selectedRecipe} onSaveNotes={handleSaveNotes} />
         </section>
       </div>
     </div>

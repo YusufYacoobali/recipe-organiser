@@ -34,10 +34,11 @@ export const mockRecipes: Recipe[] = [
       "When ready to cook, preheat the oven to 400F/200C. Lay the marinated chicken pieces out on a baking dish or roasting pan.",
       "Roast the chicken in the oven until the edges char lightly and the meat is cooked through.",
     ],
+    notes: "",
     sourceUrl: "https://example.com/butter-chicken",
   },
 
-   {
+  {
     id: "2",
     title: "Basque Cheesecake",
     imageUrl: "https://images.unsplash.com/photo-1567171466295-4afa63d45416?auto=format&fit=crop&w=1400&q=90",
@@ -69,6 +70,7 @@ export const mockRecipes: Recipe[] = [
       "Bake until deeply caramelised on top but still jiggly inside.",
       "Cool fully before chilling.",
     ],
+    notes: "",
     sourceUrl: "https://example.com/basque-cheesecake",
   },
 
@@ -103,6 +105,7 @@ export const mockRecipes: Recipe[] = [
       "Bake until golden brown.",
       "Cool before slicing.",
     ],
+    notes: "",
     sourceUrl: "https://example.com/oat-flapjacks",
   },
 
@@ -138,6 +141,7 @@ export const mockRecipes: Recipe[] = [
       "Strain and chill completely.",
       "Churn with olive oil until smooth and frozen.",
     ],
+    notes: "",
     sourceUrl: "https://example.com/rosemary-olive-oil-ice-cream",
   },
 ];

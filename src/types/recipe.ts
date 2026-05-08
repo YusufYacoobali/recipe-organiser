@@ -18,5 +18,6 @@ export type Recipe = {
   };
   ingredients: string[];
   method: string[];
+  notes: string;
   sourceUrl?: string;
 };
