@@ -47,6 +47,14 @@ function App() {
     );
   }
 
+  function handleSaveRecipe(updatedRecipe: Recipe) {
+    setRecipes((currentRecipes) =>
+      currentRecipes.map((recipe) =>
+        recipe.id === updatedRecipe.id ? updatedRecipe : recipe
+      )
+    );
+  }
+
   return (
     <div className="app">
       <AppHeader />
@@ -69,7 +77,11 @@ function App() {
         </main>
 
         <section className="recipe-detail-column">
-          <RecipeDetail recipe={selectedRecipe} onSaveNotes={handleSaveNotes} />
+          <RecipeDetail
+            recipe={selectedRecipe}
+            onSaveNotes={handleSaveNotes}
+            onSaveRecipe={handleSaveRecipe}
+          />
         </section>
       </div>
     </div>
