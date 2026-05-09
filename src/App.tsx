@@ -1,45 +1,52 @@
-import { useState } from "react";
-import { mockRecipes } from "./data/mockRecipes";
+import { useEffect, useState } from "react";
 import type { Recipe, RecipeFolder } from "./types/recipe";
 import { RecipeList } from "./components/recipes/RecipeList";
 import { RecipeDetail } from "./components/recipes/RecipeDetail";
 import { AppHeader } from "./components/layout/AppHeader";
 import { Sidebar } from "./components/layout/Sidebar";
 import { UNASSIGNED_FOLDER } from "./constants/folders";
+import {
+  getRecipeFolder,
+  loadFolders,
+  loadRecipes,
+  saveFolders,
+  saveRecipes,
+} from "./services/recipeService";
 import "./App.css";
 
 type FolderFilter = "All Recipes" | RecipeFolder;
 
-// Build the first folder list from the mock data.
-const initialFolders = Array.from(
-  new Set([
-    UNASSIGNED_FOLDER,
-    ...mockRecipes
-      .map((recipe) => getRecipeFolder(recipe))
-      .filter((folder) => folder !== UNASSIGNED_FOLDER),
-  ])
-);
-
-// Keeps "missing folder" recipes grouped in one place.
-function getRecipeFolder(recipe: Recipe) {
-  return recipe.folder?.trim() || UNASSIGNED_FOLDER;
-}
-
 function App() {
-  // Stores the recipes the app is currently showing.
-  const [recipes, setRecipes] = useState<Recipe[]>(mockRecipes);
+  // Lazy initializer: load once when App first mounts.
+  const [recipes, setRecipes] = useState<Recipe[]>(() => loadRecipes());
 
-  // Stores the folders the user can organize recipes into.
-  const [folders, setFolders] = useState<RecipeFolder[]>(initialFolders);
+  // Folders also load once, based on saved folders and recipe folders.
+  const [folders, setFolders] = useState<RecipeFolder[]>(() =>
+    loadFolders(recipes)
+  );
 
   // Stores the id of the recipe currently selected by the user.
-  const [selectedRecipeId, setSelectedRecipeId] = useState(mockRecipes[0]?.id ?? null);
+  const [selectedRecipeId, setSelectedRecipeId] = useState(
+    recipes[0]?.id ?? null
+  );
 
   // Stores whatever the user types in the URL/search box.
   const [searchText, setSearchText] = useState("");
 
   // Stores the folder selected in the sidebar.
-  const [selectedFolder, setSelectedFolder] = useState<FolderFilter>("Dinner");
+  const [selectedFolder, setSelectedFolder] = useState<FolderFilter>(() =>
+    folders.includes("Dinner") ? "Dinner" : "All Recipes"
+  );
+
+  // Persistence effect: whenever recipes change, save them locally.
+  useEffect(() => {
+    saveRecipes(recipes);
+  }, [recipes]);
+
+  // Persistence effect: whenever folders change, save them locally.
+  useEffect(() => {
+    saveFolders(folders);
+  }, [folders]);
 
   // Derived data: no useState needed because we can calculate it each render.
   const filteredRecipes = recipes.filter((recipe) => {
