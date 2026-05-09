@@ -8,10 +8,16 @@ import { Sidebar } from "./components/layout/Sidebar";
 import "./App.css";
 
 type FolderFilter = "All Recipes" | RecipeFolder;
+const initialFolders = Array.from(
+  new Set(mockRecipes.map((recipe) => recipe.folder))
+);
 
 function App() {
   // Stores the recipes the app is currently showing.
   const [recipes, setRecipes] = useState<Recipe[]>(mockRecipes);
+
+  // Stores the folders the user can organize recipes into.
+  const [folders, setFolders] = useState<RecipeFolder[]>(initialFolders);
 
   // Stores the id of the recipe currently selected by the user.
   const [selectedRecipeId, setSelectedRecipeId] = useState(mockRecipes[0]?.id ?? null);
@@ -53,6 +59,28 @@ function App() {
         recipe.id === updatedRecipe.id ? updatedRecipe : recipe
       )
     );
+
+    setSelectedFolder(updatedRecipe.folder);
+  }
+
+  function handleAddFolder(folderName: string) {
+    const trimmedFolderName = folderName.trim();
+
+    if (!trimmedFolderName) {
+      return;
+    }
+
+    const existingFolder = folders.find(
+      (folder) => folder.toLowerCase() === trimmedFolderName.toLowerCase()
+    );
+
+    if (existingFolder) {
+      setSelectedFolder(existingFolder);
+      return;
+    }
+
+    setFolders((currentFolders) => [...currentFolders, trimmedFolderName]);
+    setSelectedFolder(trimmedFolderName);
   }
 
   return (
@@ -61,8 +89,10 @@ function App() {
 
       <div className="app-body">
         <Sidebar
+          folders={folders}
           selectedFolder={selectedFolder}
           onSelectFolder={setSelectedFolder}
+          onAddFolder={handleAddFolder}
         />
 
         <main className="recipe-list-column">
@@ -79,6 +109,7 @@ function App() {
         <section className="recipe-detail-column">
           <RecipeDetail
             recipe={selectedRecipe}
+            folders={folders}
             onSaveNotes={handleSaveNotes}
             onSaveRecipe={handleSaveRecipe}
           />

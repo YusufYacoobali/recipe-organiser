@@ -11,16 +11,18 @@ import {
   X,
 } from "lucide-react";
 import { useEffect, useState } from "react";
-import type { Recipe } from "../../types/recipe";
+import type { Recipe, RecipeFolder } from "../../types/recipe";
 
 type Props = {
   recipe: Recipe | null;
+  folders: RecipeFolder[];
   onSaveNotes: (recipeId: string, notes: string) => void;
   onSaveRecipe: (recipe: Recipe) => void;
 };
 
 type EditDraft = {
   title: string;
+  folder: RecipeFolder;
   imageUrl: string;
   sourceUrl: string;
   prepTime: string;
@@ -38,6 +40,7 @@ type EditDraft = {
 
 const emptyDraft: EditDraft = {
   title: "",
+  folder: "",
   imageUrl: "",
   sourceUrl: "",
   prepTime: "",
@@ -60,6 +63,7 @@ function createEditDraft(recipe: Recipe | null): EditDraft {
 
   return {
     title: recipe.title,
+    folder: recipe.folder,
     imageUrl: recipe.imageUrl,
     sourceUrl: recipe.sourceUrl ?? "",
     prepTime: recipe.prepTime ?? "",
@@ -94,7 +98,12 @@ function parseNutritionValue(value: string) {
   return Number.isNaN(numberValue) ? null : numberValue;
 }
 
-export function RecipeDetail({ recipe, onSaveNotes, onSaveRecipe }: Props) {
+export function RecipeDetail({
+  recipe,
+  folders,
+  onSaveNotes,
+  onSaveRecipe,
+}: Props) {
   // Draft form state. The saved version lives on the recipe object in App.tsx.
   const [notesDraft, setNotesDraft] = useState("");
   const [isEditing, setIsEditing] = useState(false);
@@ -135,6 +144,7 @@ export function RecipeDetail({ recipe, onSaveNotes, onSaveRecipe }: Props) {
     const updatedRecipe: Recipe = {
       ...recipe,
       title: editDraft.title.trim() || recipe.title,
+      folder: editDraft.folder || recipe.folder,
       imageUrl: editDraft.imageUrl.trim() || recipe.imageUrl,
       sourceUrl: editDraft.sourceUrl.trim() || undefined,
       prepTime: editDraft.prepTime.trim() || undefined,
@@ -215,6 +225,20 @@ export function RecipeDetail({ recipe, onSaveNotes, onSaveRecipe }: Props) {
                     value={editDraft.servings}
                     onChange={(e) => updateEditDraft("servings", e.target.value)}
                   />
+                </label>
+
+                <label>
+                  Folder
+                  <select
+                    value={editDraft.folder}
+                    onChange={(e) => updateEditDraft("folder", e.target.value)}
+                  >
+                    {folders.map((folder) => (
+                      <option key={folder} value={folder}>
+                        {folder}
+                      </option>
+                    ))}
+                  </select>
                 </label>
 
                 <label>

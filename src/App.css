@@ -102,6 +102,18 @@
   margin-bottom: 22px;
 }
 
+.folder-title-action {
+  width: 24px;
+  height: 24px;
+  border: 0;
+  background: transparent;
+  color: #8d8d95;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  cursor: pointer;
+}
+
 .folder {
   width: 100%;
   border: 0;
@@ -124,6 +136,36 @@
 
 .folder.active {
   background: #f3f3f3;
+}
+
+.add-folder-form {
+  display: grid;
+  grid-template-columns: 1fr 30px 30px;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.add-folder-form input {
+  min-width: 0;
+  height: 34px;
+  border: 1px solid #dedede;
+  border-radius: 10px;
+  padding: 0 10px;
+  font: inherit;
+  font-size: 13px;
+  box-sizing: border-box;
+}
+
+.add-folder-form button {
+  width: 30px;
+  height: 34px;
+  border: 0;
+  border-radius: 10px;
+  background: #f1f1f3;
+  color: #30333a;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
 }
 
 /* ===== Middle recipe list ===== */
@@ -485,6 +527,7 @@
 }
 
 .edit-panel input,
+.edit-panel select,
 .edit-panel textarea {
   width: 100%;
   border: 1px solid #dedede;
@@ -499,7 +542,8 @@
   letter-spacing: 0;
 }
 
-.edit-panel input {
+.edit-panel input,
+.edit-panel select {
   height: 40px;
   padding: 0 12px;
 }

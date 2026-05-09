@@ -1,4 +1,4 @@
-export type RecipeFolder = "Dinner" | "Baking";
+export type RecipeFolder = string;
 
 export type Recipe = {
   id: string;
