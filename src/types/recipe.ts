@@ -1,10 +1,11 @@
+// User-created folder names are dynamic, so this is a string.
 export type RecipeFolder = string;
 
 export type Recipe = {
   id: string;
   title: string;
   imageUrl: string;
-  folder: RecipeFolder;
+  folder?: RecipeFolder; // Optional: missing folders display as "No assigned".
   prepTime?: string;
   cookTime?: string;
   servings?: string;

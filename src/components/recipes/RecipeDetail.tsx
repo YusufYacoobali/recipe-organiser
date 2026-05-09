@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { Recipe, RecipeFolder } from "../../types/recipe";
+import { UNASSIGNED_FOLDER } from "../../constants/folders";
 
 type Props = {
   recipe: Recipe | null;
@@ -56,6 +57,7 @@ const emptyDraft: EditDraft = {
   methodText: "",
 };
 
+// Convert a saved recipe into string values that form inputs can use.
 function createEditDraft(recipe: Recipe | null): EditDraft {
   if (!recipe) {
     return emptyDraft;
@@ -63,7 +65,7 @@ function createEditDraft(recipe: Recipe | null): EditDraft {
 
   return {
     title: recipe.title,
-    folder: recipe.folder,
+    folder: recipe.folder ?? UNASSIGNED_FOLDER,
     imageUrl: recipe.imageUrl,
     sourceUrl: recipe.sourceUrl ?? "",
     prepTime: recipe.prepTime ?? "",
@@ -80,6 +82,7 @@ function createEditDraft(recipe: Recipe | null): EditDraft {
   };
 }
 
+// Textarea format: one ingredient/step per line.
 function splitLines(value: string) {
   return value
     .split("\n")
@@ -87,6 +90,7 @@ function splitLines(value: string) {
     .filter(Boolean);
 }
 
+// Form inputs are strings; recipe nutrition stores numbers or null.
 function parseNutritionValue(value: string) {
   const trimmedValue = value.trim();
 
@@ -104,12 +108,16 @@ export function RecipeDetail({
   onSaveNotes,
   onSaveRecipe,
 }: Props) {
-  // Draft form state. The saved version lives on the recipe object in App.tsx.
+  // Notes draft is local until the user clicks "Save Notes".
   const [notesDraft, setNotesDraft] = useState("");
+
+  // Controls whether we show the normal view or the edit form.
   const [isEditing, setIsEditing] = useState(false);
+
+  // Edit draft is local form state; App.tsx owns the saved recipe.
   const [editDraft, setEditDraft] = useState<EditDraft>(emptyDraft);
 
-  //useEffect is used to update the local notes textbox when the selected recipe changes, because notesDraft does not automatically update when a new recipe prop is passed in.
+  // When a new recipe is selected, reset drafts to match that recipe.
   useEffect(() => {
     setNotesDraft(recipe?.notes ?? "");
     setEditDraft(createEditDraft(recipe));
@@ -117,6 +125,7 @@ export function RecipeDetail({
   }, [recipe?.id, recipe?.notes]);
 
   function updateEditDraft(field: keyof EditDraft, value: string) {
+    // Generic controlled-input updater for the edit form.
     setEditDraft((currentDraft) => ({
       ...currentDraft,
       [field]: value,
@@ -124,6 +133,7 @@ export function RecipeDetail({
   }
 
   function handleSourceClick() {
+    // Open external recipe source only if this recipe has one.
     if (!recipe?.sourceUrl) {
       return;
     }
@@ -132,6 +142,7 @@ export function RecipeDetail({
   }
 
   function handleCancelEdit() {
+    // Throw away unsaved form changes.
     setEditDraft(createEditDraft(recipe));
     setIsEditing(false);
   }
@@ -141,10 +152,11 @@ export function RecipeDetail({
       return;
     }
 
+    // Convert the form draft back into the real Recipe shape.
     const updatedRecipe: Recipe = {
       ...recipe,
       title: editDraft.title.trim() || recipe.title,
-      folder: editDraft.folder || recipe.folder,
+      folder: editDraft.folder || recipe.folder || UNASSIGNED_FOLDER,
       imageUrl: editDraft.imageUrl.trim() || recipe.imageUrl,
       sourceUrl: editDraft.sourceUrl.trim() || undefined,
       prepTime: editDraft.prepTime.trim() || undefined,
@@ -162,6 +174,7 @@ export function RecipeDetail({
       method: splitLines(editDraft.methodText),
     };
 
+    // Send saved recipe up to App.tsx, the source of truth.
     onSaveRecipe(updatedRecipe);
     setIsEditing(false);
   }
@@ -196,6 +209,7 @@ export function RecipeDetail({
         </div>
 
         <div className="recipe-detail-inner">
+          {/* Conditional rendering: edit form or normal recipe display. */}
           {isEditing ? (
             <section className="edit-panel">
               <div className="edit-panel-header">
@@ -233,6 +247,7 @@ export function RecipeDetail({
                     value={editDraft.folder}
                     onChange={(e) => updateEditDraft("folder", e.target.value)}
                   >
+                    {/* Folder options come from App.tsx folder state. */}
                     {folders.map((folder) => (
                       <option key={folder} value={folder}>
                         {folder}
@@ -283,6 +298,7 @@ export function RecipeDetail({
               </div>
 
               <div className="edit-nutrition-grid">
+                {/* Reuse the same input pattern for each nutrition field. */}
                 {(["calories", "protein", "sugars", "carbs", "fat"] as const).map(
                   (field) => (
                     <label key={field}>
@@ -387,6 +403,7 @@ export function RecipeDetail({
 
             <textarea
               value={notesDraft}
+              // Controlled textarea: React state is the value.
               onChange={(e) => setNotesDraft(e.target.value)}
               placeholder="Add your own notes, tips, or variations here..."
             />

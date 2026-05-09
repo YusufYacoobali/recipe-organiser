@@ -48,11 +48,13 @@ export function RecipeList({
         <span className="recipe-count">{recipes.length}</span>
       </div>
 
+      {/* Render one RecipeCard per recipe in the filtered list. */}
       {recipes.map((recipe) => (
         <RecipeCard
           key={recipe.id}
           recipe={recipe}
           isSelected={selectedRecipeId === recipe.id}
+          // Child tells parent which recipe was clicked.
           onSelect={() => onSelectRecipe(recipe)}
         />
       ))}

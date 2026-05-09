@@ -130,7 +130,10 @@
   cursor: pointer;
 }
 
-.folder + .folder {
+.folder + .folder,
+.folder-row + .folder-row,
+.folder + .folder-row,
+.folder-row + .folder {
   margin-top: 4px;
 }
 
@@ -138,14 +141,64 @@
   background: #f3f3f3;
 }
 
-.add-folder-form {
+.folder-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  border-radius: 10px;
+}
+
+.folder-row.active {
+  background: #f3f3f3;
+}
+
+.folder-row-main {
+  min-width: 0;
+}
+
+.folder-row-actions {
+  display: flex;
+  gap: 2px;
+  padding-right: 6px;
+  opacity: 0;
+}
+
+.folder-row:hover .folder-row-actions,
+.folder-row:focus-within .folder-row-actions {
+  opacity: 1;
+}
+
+.folder-row-actions button {
+  width: 26px;
+  height: 26px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: #737780;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+
+.folder-row-actions button:hover {
+  background: #e9e9eb;
+  color: #111;
+}
+
+.add-folder-form,
+.folder-edit-form {
   display: grid;
   grid-template-columns: 1fr 30px 30px;
   gap: 6px;
   margin-top: 10px;
 }
 
-.add-folder-form input {
+.folder-edit-form {
+  margin-bottom: 6px;
+}
+
+.add-folder-form input,
+.folder-edit-form input {
   min-width: 0;
   height: 34px;
   border: 1px solid #dedede;
@@ -156,7 +209,8 @@
   box-sizing: border-box;
 }
 
-.add-folder-form button {
+.add-folder-form button,
+.folder-edit-form button {
   width: 30px;
   height: 34px;
   border: 0;

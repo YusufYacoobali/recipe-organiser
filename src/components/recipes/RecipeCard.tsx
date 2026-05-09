@@ -10,6 +10,7 @@ type Props = {
 export function RecipeCard({ recipe, isSelected, onSelect }: Props) {
   return (
     <button
+      // Click handler comes from RecipeList/App, so this card stays reusable.
       onClick={onSelect}
       className={`recipe-card ${isSelected ? "selected" : ""}`}
     >
